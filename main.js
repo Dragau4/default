@@ -6,7 +6,13 @@ var roleFixer = require('role.fixer');
 
 module.exports.loop = function () {
 
-
+    var towers = _.filter(Game.structures, (s) => s.structureType == STRUCTURE_TOWER);
+    
+    for (turret in towers) {
+        
+        var tower = towers[turret]
+        towerControl.run(tower)
+    }
 
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
@@ -22,48 +28,76 @@ module.exports.loop = function () {
     }
 
     var carriers = _.filter(Game.creeps, (creep) => creep.memory.role == 'carrier');
-    console.log('Carriers: ' + carriers.length);
+   
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-    console.log('Builders: ' + builders.length);
+    
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-    console.log('Upgraders: ' + upgraders.length);
+    
 
 
     if (carriers.length == 0) {
         var emergencyMode = true
+        console.log('Emergency Mode activated')
+    }
+    else {
+        var emergencyMode = false
+        
     }
    
     
-    
-    if (carriers.length < 2) {
-        var newName = 'Carrier.' + Game.time;
-        
-        Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'carrier' } });
-    }
-    else if (builders.length < 3) {
-        var newName = 'Builder.' + Game.time;
 
-        Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'builder' } });
-    }
-    else if (upgraders.length < 5) {
-        var newName = 'Upgrader.' + Game.time;
 
-        Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
-    }
- 
+    var fixers = carriers.length + upgraders.length + builders.length;
+
     if (emergencyMode) {
+
+        
         Game.notify('No carrier left, Emergency Mode activated', 30);
-        var fixers = carriers.length + upgraders.length + builders.length
-        if (fixers.length == 0) {
+        console.log('Fixers: ' + fixers);
+        
+       
+        if (fixers === 0) {
             Game.notify(' /!\ ALERT /!\ ALERT /!\ NO FIXER I REPEAT NO FIXER')
+            console.log('/!\ ALERT /!\ ALERT / !\ NO FIXER I REPEAT NO FIXER')
             var newName = 'Fixer.' + Game.time;
 
-        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, { memory: { role: 'carrier' } });
         }
         else {
-            Game.notify(fixers +' fixers are fixing our colony',10)
+            Game.notify(fixers + ' fixers are fixing our colony', 10)
+            console.log(fixers + ' fixers are fixing our colony')
         }
     }
+    else {
+
+        console.log('Carriers: ' + carriers.length);
+        console.log('Upgraders: ' + upgraders.length);
+        console.log('Builders: ' + builders.length);
+
+        
+    }
+    if (carriers.length < 3) {
+        var newName = 'Carrier.' + Game.time;
+
+        Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE, MOVE], newName, { memory: { role: 'carrier' } });
+    }
+    else if (builders.length < 5) {
+        var newName = 'Builder.' + Game.time;
+
+        Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE, MOVE], newName, { memory: { role: 'builder' } });
+    }
+    else if (upgraders.length < 3) {
+        var newName = 'Upgrader.' + Game.time;
+
+        Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE, MOVE], newName, { memory: { role: 'upgrader' } });
+    }
+    else {
+        if (!emergencyMode) {
+            console.log('Everything is normal')
+        }
+
+    }
+
 
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
@@ -84,16 +118,6 @@ module.exports.loop = function () {
         }
     }
 
-    var towers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_TOWER);
-
-    if (towers.length) {
-        for (var tower in towers) {
-            towerControl.run(tower)
-
-        }
-    }
-    else {
-        console.log("no tower found")
-    }
+  
 
 }

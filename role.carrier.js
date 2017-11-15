@@ -34,8 +34,8 @@ var roleCarrier = {
                     }
                 }
                 else if (tower) {
-                    if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target);
+                    if (creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(tower);
                     }
                 }
                 else {
