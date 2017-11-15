@@ -2,7 +2,7 @@ var roleCarrier = require('role.carrier');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var towerControl = require('tower.control');
-var roleRescuer = require('role.rescuer');
+var roleFixer = require('role.fixer');
 
 module.exports.loop = function () {
 
@@ -32,9 +32,9 @@ module.exports.loop = function () {
     if (carriers.length == 0) {
         var emergencyMode = true
     }
-
-
    
+
+    
     if (carriers.length < 3) {
         var newName = 'Carrier.' + Game.time;
         
@@ -50,11 +50,22 @@ module.exports.loop = function () {
 
         Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
     }
+ 
+    if (emergencyMode) {
+        Game.notify('No carrier left, Emergency Mode activated', 30);
+        var fixers = carriers.length + upgraders.length + builders.length
+        if (fixers.length == 0) {
+            Game.notify(' /!\ ALERT /!\ ALERT /!\ NO FIXER I REPEAT NO FIXER', 2)
+        }
+        else {
+            Game.notify(fixers +' fixers are fixing our colony',10)
+        }
+    }
 
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
         if (emergencyMode) {
-            roleRescuer.run(creep)
+            roleFixer.run(creep)
         }
         else {
             
@@ -71,7 +82,8 @@ module.exports.loop = function () {
     }
 
     var towers = _.filter(Game.structures, (structure) => structure.structureType == STRUCTURE_TOWER);
-    if (towers) {
+
+    if (towers.length) {
         for (var tower in towers) {
             towerControl.run(tower)
 

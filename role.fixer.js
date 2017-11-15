@@ -1,18 +1,18 @@
-var roleRescuer = {
+var roleFixer = {
 
 
     run: function (creep) {
 
-        if (creep.memory.rescuing && creep.carry.energy == 0) {
-            creep.memory.rescuing = false;
+        if (creep.memory.fixing && creep.carry.energy == 0) {
+            creep.memory.fixing = false;
 
         }
-        if (!creep.memory.rescuing && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.rescuing = true;
+        if (!creep.memory.fixing && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.fixing = true;
 
         }
 
-        if (creep.memory.rescuing) {
+        if (creep.memory.fixing) {
             var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
@@ -38,4 +38,4 @@ var roleRescuer = {
     }
 };
 
-module.exports = roleRescuer;
+module.exports = roleFixer;
