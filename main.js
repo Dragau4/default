@@ -35,7 +35,7 @@ module.exports.loop = function () {
    
     
     
-    if (carriers.length < 3) {
+    if (carriers.length < 2) {
         var newName = 'Carrier.' + Game.time;
         
         Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'carrier' } });
@@ -45,7 +45,7 @@ module.exports.loop = function () {
 
         Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'builder' } });
     }
-    else if (upgraders.length < 3) {
+    else if (upgraders.length < 5) {
         var newName = 'Upgrader.' + Game.time;
 
         Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
@@ -55,7 +55,10 @@ module.exports.loop = function () {
         Game.notify('No carrier left, Emergency Mode activated', 30);
         var fixers = carriers.length + upgraders.length + builders.length
         if (fixers.length == 0) {
-            Game.notify(' /!\ ALERT /!\ ALERT /!\ NO FIXER I REPEAT NO FIXER', 2)
+            Game.notify(' /!\ ALERT /!\ ALERT /!\ NO FIXER I REPEAT NO FIXER')
+            var newName = 'Fixer.' + Game.time;
+
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
         }
         else {
             Game.notify(fixers +' fixers are fixing our colony',10)
