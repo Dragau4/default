@@ -11,7 +11,7 @@ module.exports.loop = function () {
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
+            console.log(name,'dieded');
         }
     }
 
@@ -33,22 +33,22 @@ module.exports.loop = function () {
         var emergencyMode = true
     }
    
-
+    
     
     if (carriers.length < 3) {
         var newName = 'Carrier.' + Game.time;
         
-        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, { memory: { role: 'carrier' } });
+        Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'carrier' } });
     }
     else if (builders.length < 3) {
         var newName = 'Builder.' + Game.time;
 
-        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, { memory: { role: 'builder' } });
+        Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'builder' } });
     }
     else if (upgraders.length < 3) {
         var newName = 'Upgrader.' + Game.time;
 
-        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
+        Game.spawns['Spawn1'].spawnCreep([WORK,WORK, CARRY, MOVE], newName, { memory: { role: 'upgrader' } });
     }
  
     if (emergencyMode) {
