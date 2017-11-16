@@ -35,17 +35,17 @@ var roleBuilder = {
                     }
                 }
                 else {
-                    var sources = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-                    if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(source);
+                    var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+                    if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(droppedEnergy);
                     }
                 }
             }
         }
         else {
-            var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
+            var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+            if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(droppedEnergy);
             }
         }
     }

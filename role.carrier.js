@@ -18,35 +18,19 @@ var roleCarrier = {
                 var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
+                            structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
                     }
                 });
-                var urgentTower = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_TOWER) && structure.energy < (structure.energyCapacity/2);
-                    }
-                });
+                
 
-                var tower = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
-                    }
-                });
-                if (urgentTower) {
-                    if (creep.transfer(urgentTower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(urgentTower);
-                    }
-                }
-                else if (target) {
+                
+               
+                if (target) {
                     if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(target);
                     }
                 }
-                else if (tower) {
-                    if (creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(tower);
-                    }
-                }
+                
                 else {
                     if (creep.memory.carrying && creep.carry.energy == 0) {
                         creep.memory.carrying = false;
@@ -80,26 +64,26 @@ var roleCarrier = {
                                 }
                             }
                             else {
-                                var sources = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-                                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                                    creep.moveTo(source);
+                                var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+                                if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
+                                    creep.moveTo(droppedEnergy);
                                 }
                             }
                         }
                     }
                     else {
-                        var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-                        if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(source);
+                        var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+                        if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(droppedEnergy);
                         }
                     }
                 }
                     
             }
             else {
-                var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(source);
+                var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+                if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(droppedEnergy);
                 }
             }
 

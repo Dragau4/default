@@ -3,6 +3,9 @@ var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var towerControl = require('tower.control');
 var roleFixer = require('role.fixer');
+var roleMiner = require('role.miner');
+var roleDefender = require('role.defender');
+var roleScout = require('role.scout');
 
 module.exports.loop = function () {
 
@@ -14,6 +17,7 @@ module.exports.loop = function () {
         towerControl.run(tower)
     }
 
+  
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
@@ -24,7 +28,10 @@ module.exports.loop = function () {
     
 
     for (var name in Game.rooms) {
-        console.log('Room "' + name + '" has ' + Game.rooms[name].energyAvailable + ' energy');
+        var room = Game.rooms[name];
+        console.log('Room "' + name + '" has ' + room.energyAvailable + ' energy');
+        var sources = room.find(FIND_SOURCES);
+        
     }
 
     var carriers = _.filter(Game.creeps, (creep) => creep.memory.role == 'carrier');
@@ -33,9 +40,11 @@ module.exports.loop = function () {
     
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     
+    var miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner');
 
+    var scouts = _.filter(Game.creeps, (creep) => creep.memory.role == 'scout');
 
-    if (carriers.length == 0) {
+    if (carriers.length == 0 || miners.length == 0) {
         var emergencyMode = true
         console.log('Emergency Mode activated')
     }
@@ -47,7 +56,7 @@ module.exports.loop = function () {
     
 
 
-    var fixers = carriers.length + upgraders.length + builders.length;
+    var fixers = carriers.length + upgraders.length + miners.length + builders.length;
 
     if (emergencyMode) {
 
@@ -73,13 +82,62 @@ module.exports.loop = function () {
         console.log('Carriers: ' + carriers.length);
         console.log('Upgraders: ' + upgraders.length);
         console.log('Builders: ' + builders.length);
-
+        console.log('Miners: ' + miners.length)
+        console.log('Scouts: '+ scouts.length)
         
     }
-    if (carriers.length < 3) {
+
+    
+    for (var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if (creep.memory.role == 'scout') {
+            roleScout.run(creep)
+            var ennemyInRoom = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            if (ennemyInRoom) {
+                var underAttack = true
+                console.log(underAttack)
+            }
+            else {
+                var underAttack = false
+                console.log(underAttack)
+            }
+
+        }
+    }
+    for (var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        
+        if (underAttack) {
+            roleDefender.run(creep)
+        }
+        else if (emergencyMode) {
+            roleFixer.run(creep)
+        }
+        else  {
+            if (creep.memory.role == 'miner') {
+                roleMiner.run(creep);
+            }
+            if (creep.memory.role == 'carrier') {
+                roleCarrier.run(creep);
+            }
+            if (creep.memory.role == 'upgrader') {
+                roleUpgrader.run(creep);
+            }
+            if (creep.memory.role == 'builder') {
+                roleBuilder.run(creep);
+            }
+        }
+    }
+
+    if (miners.length < sources.length) {
+        var newName = 'Miner.' + Game.time;
+
+        Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, WORK, MOVE], newName, { memory: { role: 'miner' } });
+    }
+    else if (carriers.length < 6) {
         var newName = 'Carrier.' + Game.time;
 
-        Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE, MOVE], newName, { memory: { role: 'carrier' } });
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, CARRY, MOVE, MOVE], newName, { memory: { role: 'carrier' } });
     }
     else if (builders.length < 5) {
         var newName = 'Builder.' + Game.time;
@@ -91,31 +149,16 @@ module.exports.loop = function () {
 
         Game.spawns['Spawn1'].spawnCreep([WORK, WORK, CARRY, MOVE, MOVE], newName, { memory: { role: 'upgrader' } });
     }
+    else if (scouts.length < 1) {
+        var newName = 'Scout.' + Game.time;
+
+        Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, MOVE, TOUGH], newName, { memory: { role: 'scout' } });
+    }
     else {
         if (!emergencyMode) {
             console.log('Everything is normal')
         }
 
-    }
-
-
-    for (var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        if (emergencyMode) {
-            roleFixer.run(creep)
-        }
-        else {
-            
-            if (creep.memory.role == 'carrier') {
-                roleCarrier.run(creep);
-            }
-            if (creep.memory.role == 'upgrader') {
-                roleUpgrader.run(creep);
-            }
-            if (creep.memory.role == 'builder') {
-                roleBuilder.run(creep);
-            }
-        }
     }
 
   
