@@ -8,13 +8,17 @@ var roleDefender = {
 
 
         if (creep.carry.energy < creep.carryCapacity) {
-            var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-            if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(droppedEnergy);
+            var energy = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+                filter: (resource) => {
+                    return (resource.resourceType == RESOURCE_ENERGY)
+                }
+            });
+            if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(energy);
             }
         }
         else {
-            var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_TOWER) &&
                         structure.energy < structure.energyCapacity;
@@ -26,7 +30,7 @@ var roleDefender = {
                 }
             }
             else {
-                var tower = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                var tower = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_TOWER);
                     }

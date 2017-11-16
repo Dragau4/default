@@ -18,15 +18,15 @@ var towerControl = {
                 (structure.hits <= 30000)
         });
 
-        var damagedCreep = _.filter(Game.creeps, (creep) => (creep.hits != creep.hitsMax));
+        var damagedCreep = _.filter(Game.creeps, (creep) => (creep.hits < creep.hitsMax));
         
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
 
         if (closestHostile) {
             tower.attack(closestHostile);
         }
-        else if (damagedCreep) {
-            tower.heal(damagedCreep[0])
+        else if (damagedCreep.length > 0) {
+            tower.heal(damagedCreep[0]);
         }
         else if (closestDamagedRoad && tower.energy >= 500) {
             tower.repair(closestDamagedRoad);

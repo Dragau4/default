@@ -13,7 +13,7 @@ var roleFixer = {
         }
 
         if (creep.memory.fixing) {
-            var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
@@ -30,7 +30,7 @@ var roleFixer = {
             }
         }
         else {
-            var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+            var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
             if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(source);
             }

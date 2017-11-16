@@ -15,10 +15,10 @@ var roleCarrier = {
             }
 
             if (creep.memory.carrying) {
-                var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+                            structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
                     }
                 });
                 
@@ -42,7 +42,7 @@ var roleCarrier = {
                     }
 
                     if (creep.memory.carrying) {
-                        var target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+                        var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                         if (target) {
                             if (creep.build(target) == ERR_NOT_IN_RANGE) {
                                 creep.moveTo(target);
@@ -64,26 +64,38 @@ var roleCarrier = {
                                 }
                             }
                             else {
-                                var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-                                if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
-                                    creep.moveTo(droppedEnergy);
+                                var energy = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+                                    filter: (resource) => {
+                                        return (resource.resourceType == RESOURCE_ENERGY)
+                                    }
+                                });
+                                if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                                    creep.moveTo(energy);
                                 }
                             }
                         }
                     }
                     else {
-                        var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-                        if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(droppedEnergy);
+                        var energy = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+                            filter: (resource) => {
+                                return (resource.resourceType == RESOURCE_ENERGY)
+                            }
+                        });
+                        if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(energy);
                         }
                     }
                 }
                     
             }
             else {
-                var droppedEnergy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-                if (creep.pickup(droppedEnergy) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(droppedEnergy);
+                var energy = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+                    filter: (resource) => {
+                        return (resource.resourceType == RESOURCE_ENERGY)
+                    }
+                });
+                if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(energy);
                 }
             }
 

@@ -6,6 +6,7 @@ var roleFixer = require('role.fixer');
 var roleMiner = require('role.miner');
 var roleDefender = require('role.defender');
 var roleScout = require('role.scout');
+var roleMaintener = require('role.maintener');
 
 module.exports.loop = function () {
 
@@ -21,7 +22,7 @@ module.exports.loop = function () {
     for (var name in Memory.creeps) {
         if (!Game.creeps[name]) {
             delete Memory.creeps[name];
-            console.log(name,'dieded');
+            console.log(name,' dieded');
         }
     }
 
@@ -43,6 +44,9 @@ module.exports.loop = function () {
     var miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner');
 
     var scouts = _.filter(Game.creeps, (creep) => creep.memory.role == 'scout');
+
+    var mainteners = _.filter(Game.creeps, (creep) => creep.memory.role == 'maintener');
+
 
     if (carriers.length == 0 || miners.length == 0) {
         var emergencyMode = true
@@ -95,11 +99,11 @@ module.exports.loop = function () {
             var ennemyInRoom = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
             if (ennemyInRoom) {
                 var underAttack = true
-                console.log(underAttack)
+                
             }
             else {
                 var underAttack = false
-                console.log(underAttack)
+                
             }
 
         }
@@ -126,15 +130,18 @@ module.exports.loop = function () {
             if (creep.memory.role == 'builder') {
                 roleBuilder.run(creep);
             }
+            if (creep.memory.role == 'maintener') {
+                roleMaintener.run(creep);
+            }
         }
     }
 
     if (miners.length < sources.length) {
         var newName = 'Miner.' + Game.time;
 
-        Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, WORK, MOVE], newName, { memory: { role: 'miner' } });
+        Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, WORK, MOVE,MOVE,MOVE, MOVE], newName, { memory: { role: 'miner' } });
     }
-    else if (carriers.length < 6) {
+    else if (carriers.length < 5) {
         var newName = 'Carrier.' + Game.time;
 
         Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, CARRY, MOVE, MOVE], newName, { memory: { role: 'carrier' } });
@@ -153,6 +160,12 @@ module.exports.loop = function () {
         var newName = 'Scout.' + Game.time;
 
         Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, MOVE, TOUGH], newName, { memory: { role: 'scout' } });
+    }
+    else if (mainteners.length < 2) {
+        var newName = 'Maintener.' + Game.time;
+
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, CARRY, MOVE, MOVE], newName, { memory: { role: 'maintener' } });
+
     }
     else {
         if (!emergencyMode) {
