@@ -87,7 +87,8 @@ module.exports.loop = function () {
         console.log('Upgraders: ' + upgraders.length);
         console.log('Builders: ' + builders.length);
         console.log('Miners: ' + miners.length)
-        console.log('Scouts: '+ scouts.length)
+        console.log('Scouts: ' + scouts.length)
+        console.log('Mainteners: ' + mainteners.length)
         
     }
 
