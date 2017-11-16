@@ -21,14 +21,23 @@ var roleCarrier = {
                             structure.structureType == STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity;
                     }
                 });
+                var urgentTower = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_TOWER) && structure.energy < (structure.energyCapacity/2);
+                    }
+                });
 
                 var tower = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
                     }
                 });
-
-                if (target) {
+                if (urgentTower) {
+                    if (creep.transfer(urgentTower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(urgentTower);
+                    }
+                }
+                else if (target) {
                     if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(target);
                     }
