@@ -17,6 +17,11 @@ var towerControl = {
             filter: (structure) => (structure.structureType == STRUCTURE_WALL) &&
                 (structure.hits <= 30000)
         });
+        var closestDamagedStorage = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (structure) => (structure.structureType == STRUCTURE_STORAGE) &&
+                (structure.hits <structure.hitsMax)
+        });
+
 
         var damagedCreep = _.filter(Game.creeps, (creep) => (creep.hits < creep.hitsMax));
         
@@ -31,6 +36,10 @@ var towerControl = {
         else if (closestDamagedRoad && tower.energy >= 500) {
             tower.repair(closestDamagedRoad);
         }
+        else if (closestDamagedStorage && tower.energy >= 500) {
+            tower.repair(closestDamagedStorage);
+        }
+            
         else if (closestDamagedRampart && tower.energy >= 500) {
             tower.repair(closestDamagedRampart);
         }

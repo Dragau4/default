@@ -88,9 +88,22 @@ var roleMaintener = {
                                             return (resource.resourceType == RESOURCE_ENERGY)
                                         }
                                     });
-                                    if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
-                                        creep.moveTo(energy);
+                                    var storage = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                                        filter: (structure) => {
+                                            return (structure.structureType == STRUCTURE_STORAGE) && structure.store[RESOURCE_ENERGY] > 0;
+                                        }
+                                    });
+                                    if (storage) {
+                                        if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                                            creep.moveTo(storage);
+                                        }
                                     }
+                                    else if (energy) {
+                                        if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                                            creep.moveTo(energy);
+                                        }
+                                    }
+                                    
                                 }
                             }
                         }
@@ -100,9 +113,22 @@ var roleMaintener = {
                                     return (resource.resourceType == RESOURCE_ENERGY)
                                 }
                             });
-                            if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
-                                creep.moveTo(energy);
+                            var storage = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                                filter: (structure) => {
+                                    return (structure.structureType == STRUCTURE_STORAGE) && structure.store[RESOURCE_ENERGY] > 0;
+                                }
+                            });
+                            if (storage) {
+                                if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                                    creep.moveTo(storage);
+                                }
                             }
+                            else if (energy) {
+                                if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                                    creep.moveTo(energy);
+                                }
+                            }
+                            
                         }
                     }
 
@@ -113,9 +139,22 @@ var roleMaintener = {
                             return (resource.resourceType == RESOURCE_ENERGY)
                         }
                     });
-                    if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(energy);
+                    var storage = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (structure) => {
+                            return (structure.structureType == STRUCTURE_STORAGE) && structure.store[RESOURCE_ENERGY] > 0;
+                        }
+                    });
+                    if (storage) {
+                        if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(storage);
+                        }
                     }
+                    else if (energy) {
+                        if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                            creep.moveTo(energy);
+                        }
+                    }
+                   
                 }
             }
             
@@ -126,10 +165,22 @@ var roleMaintener = {
                     return (resource.resourceType == RESOURCE_ENERGY)
                 }
             });
-            
-            if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(energy);
+            var storage = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_STORAGE) && structure.store[RESOURCE_ENERGY] > 0;
+                }
+            });
+            if (storage) {
+                if (creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(storage);
+                }
             }
+            else if (energy) {
+                if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(energy);
+                }
+            }
+            
         }
     }
 }

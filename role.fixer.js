@@ -30,9 +30,31 @@ var roleFixer = {
             }
         }
         else {
+            var energy = creep.pos.findClosestByRange(FIND_DROPPED_RESOURCES, {
+                filter: (resource) => {
+                    return (resource.resourceType == RESOURCE_ENERGY)
+                }
+            });
+            var storage = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_STORAGE) && structure.energy > 0;
+                }
+            });
             var source = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
+            if (energy) {
+                if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(energy);
+                }
+            }
+            else if (storage){
+                if (creep.pickup(storage) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(storage);
+                }
+            }
+            else if (source){
+                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source);
+                }
             }
         }
     }
